@@ -87,4 +87,12 @@ export class TicketsService {
   ): Promise<Ticket> {
     throw new Error('Method not implemented.');
   }
+
+  async findAll(user: any): Promise<Ticket[]> {
+    throw new Error('Method not implemented.');
+  }
+
+  async findOne(id: string, user: any): Promise<Ticket> {
+    throw new Error('Method not implemented.');
+  }
 }
