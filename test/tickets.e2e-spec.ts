@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
-import { TicketStatus } from '../src/tickets/tickets.service';
+import { TicketStatus } from '../src/domain/enums/ticket-status.enum';
 
 describe('Tickets Module Workflow (e2e)', () => {
   let app: INestApplication<App>;
