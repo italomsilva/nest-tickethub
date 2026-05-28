@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Req, ForbiddenException } from '@nestjs/common';
 import { CreateDepartmentUseCase } from '../../application/use-cases/departments/create-department.use-case';
 import { FindAllDepartmentsUseCase } from '../../application/use-cases/departments/find-all-departments.use-case';
+import { CreateDepartmentDto } from './dtos/create-department.dto';
 
 @Controller('departments')
 export class DepartmentsController {
@@ -15,7 +16,7 @@ export class DepartmentsController {
   }
 
   @Post()
-  async create(@Body() body: any, @Req() user: any): Promise<any> {
+  async create(@Body() body: CreateDepartmentDto, @Req() user: any): Promise<any> {
     if (user.role !== 'ADMIN') {
       throw new ForbiddenException('Only ADMIN can create departments');
     }

@@ -8,6 +8,9 @@ import { ResolveTicketUseCase } from '../../application/use-cases/tickets/resolv
 import { UpdateTicketStatusUseCase } from '../../application/use-cases/tickets/update-ticket-status.use-case';
 import { Ticket } from '../../domain/entities/ticket.entity';
 import { TicketStatus } from '../../domain/enums/ticket-status.enum';
+import { CreateTicketDto } from './dtos/create-ticket.dto';
+import { ResolveTicketDto } from './dtos/resolve-ticket.dto';
+import { UpdateTicketStatusDto } from './dtos/update-ticket-status.dto';
 
 @Controller('tickets')
 export class TicketsController {
@@ -23,7 +26,7 @@ export class TicketsController {
   @Post()
   @UseInterceptors(FileInterceptor('photo'))
   async create(
-    @Body() dto: any,
+    @Body() dto: CreateTicketDto,
     @Req() req: any,
     @UploadedFile() file?: any,
   ): Promise<Ticket> {
@@ -53,13 +56,16 @@ export class TicketsController {
     if (reqUser.role !== 'AGENT') {
       throw new ForbiddenException('Only AGENT can assign tickets');
     }
-    return this.assignTicketUseCase.execute(id, reqUser.id, reqUser.departmentId);
+    if (reqUser.departmentId !== undefined) {
+      return this.assignTicketUseCase.execute(id, reqUser.id, reqUser.departmentId);
+    }
+    return this.assignTicketUseCase.execute(id, reqUser.id);
   }
 
   @Patch(':id/resolve')
   async resolve(
     @Param('id') id: string,
-    @Body() body: { solution: string },
+    @Body() body: ResolveTicketDto,
     @Req() req: any,
   ): Promise<Ticket> {
     const reqUser = req.user || req;
@@ -75,7 +81,7 @@ export class TicketsController {
   @Patch(':id/status')
   async updateStatus(
     @Param('id') id: string,
-    @Body() body: { status: TicketStatus; justification?: string },
+    @Body() body: UpdateTicketStatusDto,
     @Req() req: any,
   ): Promise<Ticket> {
     const reqUser = req.user || req;

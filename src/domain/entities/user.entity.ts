@@ -7,5 +7,7 @@ export class User {
   passwordHash: string;
   role: UserRole;
   departmentId?: string;
+  phone?: string;
+  profileImage?: string;
   createdAt: Date;
 }

@@ -1,6 +1,7 @@
 import { Controller, Post, Get, Body, Param, Req, BadRequestException } from '@nestjs/common';
 import { CreateCommentUseCase } from '../../application/use-cases/comments/create-comment.use-case';
 import { GetCommentsUseCase } from '../../application/use-cases/comments/get-comments.use-case';
+import { CreateCommentDto } from './dtos/create-comment.dto';
 
 @Controller('tickets/:ticketId/comments')
 export class CommentsController {
@@ -12,7 +13,7 @@ export class CommentsController {
   @Post()
   async createComment(
     @Param('ticketId') ticketId: string,
-    @Body() body: { message: string },
+    @Body() body: CreateCommentDto,
     @Req() user: any,
   ): Promise<any> {
     if (!body.message || body.message.trim() === '') {
