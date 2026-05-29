@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { DepartmentsController } from '../../interface/controllers/departments.controller';
 import { CreateDepartmentUseCase } from '../../application/use-cases/departments/create-department.use-case';
 import { FindAllDepartmentsUseCase } from '../../application/use-cases/departments/find-all-departments.use-case';
-import { InMemoryDepartmentsRepository } from '../database/in-memory/in-memory-departments.repository';
+import { PostgresDepartmentsRepository } from '../database/postgres/repositories/postgres-departments.repository';
 
 @Module({
   controllers: [DepartmentsController],
@@ -11,7 +11,7 @@ import { InMemoryDepartmentsRepository } from '../database/in-memory/in-memory-d
     FindAllDepartmentsUseCase,
     {
       provide: 'IDepartmentsRepository',
-      useClass: InMemoryDepartmentsRepository,
+      useClass: PostgresDepartmentsRepository,
     },
   ],
   exports: [CreateDepartmentUseCase, FindAllDepartmentsUseCase],

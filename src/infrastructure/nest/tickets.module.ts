@@ -6,8 +6,8 @@ import { FindOneTicketUseCase } from '../../application/use-cases/tickets/find-o
 import { AssignTicketUseCase } from '../../application/use-cases/tickets/assign-ticket.use-case';
 import { ResolveTicketUseCase } from '../../application/use-cases/tickets/resolve-ticket.use-case';
 import { UpdateTicketStatusUseCase } from '../../application/use-cases/tickets/update-ticket-status.use-case';
-import { InMemoryTicketsRepository } from '../database/in-memory/in-memory-tickets.repository';
-import { InMemoryTicketAuditLogsRepository } from '../database/in-memory/in-memory-audit-logs.repository';
+import { PostgresTicketsRepository } from '../database/postgres/repositories/postgres-tickets.repository';
+import { PostgresTicketAuditLogsRepository } from '../database/postgres/repositories/postgres-audit-logs.repository';
 import { HybridNotificationGateway } from '../gateways/hybrid-notification.gateway';
 import { LocalStorageGateway } from '../gateways/local-storage.gateway';
 import { AmazonS3StorageGateway } from '../gateways/s3-storage.gateway';
@@ -23,11 +23,11 @@ import { AmazonS3StorageGateway } from '../gateways/s3-storage.gateway';
     UpdateTicketStatusUseCase,
     {
       provide: 'ITicketsRepository',
-      useClass: InMemoryTicketsRepository,
+      useClass: PostgresTicketsRepository,
     },
     {
       provide: 'ITicketAuditLogsRepository',
-      useClass: InMemoryTicketAuditLogsRepository,
+      useClass: PostgresTicketAuditLogsRepository,
     },
     {
       provide: 'INotificationGateway',

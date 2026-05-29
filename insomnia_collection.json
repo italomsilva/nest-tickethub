@@ -1,0 +1,461 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-05-29T11:15:00.000Z",
+  "__export_source": "insomnia.desktop.app:v8.0.0",
+  "resources": [
+    {
+      "_id": "wrk_1",
+      "parentId": null,
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "name": "TicketHub API",
+      "description": "API collection for testing the NestJS TicketHub application with pre-configured mock JWT authentication roles.",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_1",
+      "parentId": "wrk_1",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000",
+        "client_token": "client-jwt-token",
+        "agent_ti_token": "agent-ti-jwt-token",
+        "agent_rh_token": "agent-rh-jwt-token",
+        "admin_token": "admin-jwt-token",
+        "ticket_id": "paste-ticket-uuid-here"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "client_token",
+          "agent_ti_token",
+          "agent_rh_token",
+          "admin_token",
+          "ticket_id"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1,
+      "_type": "environment"
+    },
+    {
+      "_id": "jar_1",
+      "parentId": "wrk_1",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "name": "Default Cookie Jar",
+      "cookies": [],
+      "_type": "cookie_jar"
+    },
+    {
+      "_id": "fld_auth",
+      "parentId": "wrk_1",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "name": "1. Authentication",
+      "description": "Endpoints related to login and third-party authentication.",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1716982181000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_login",
+      "parentId": "fld_auth",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "url": "{{ _.base_url }}/auth/login",
+      "name": "Standard Login",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"admin@tickethub.com\",\n  \"password\": \"password123\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1716982181000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_oauth",
+      "parentId": "fld_auth",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "url": "{{ _.base_url }}/auth/oauth",
+      "name": "OAuth Login",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"provider\": \"google\",\n  \"token\": \"google-oauth-token-example\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1716982180000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "fld_users",
+      "parentId": "wrk_1",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "name": "2. Users",
+      "description": "Endpoints related to user retrieval and admin-level user creation.",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1716982180000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_users_me",
+      "parentId": "fld_users",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "url": "{{ _.base_url }}/users/me",
+      "name": "Get My Profile",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.client_token }}"
+      },
+      "metaSortKey": -1716982181000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_user",
+      "parentId": "fld_users",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "url": "{{ _.base_url }}/users",
+      "name": "Create User (Admin Only)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Carlos Agente\",\n  \"email\": \"carlos.suporte@tickethub.com\",\n  \"role\": \"AGENT\",\n  \"departmentId\": \"IT-DEPT\",\n  \"phone\": \"+5511999998888\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.admin_token }}"
+      },
+      "metaSortKey": -1716982180000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "fld_departments",
+      "parentId": "wrk_1",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "name": "3. Departments",
+      "description": "Endpoints related to department management.",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1716982179000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_list_departments",
+      "parentId": "fld_departments",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "url": "{{ _.base_url }}/departments",
+      "name": "List All Departments",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.client_token }}"
+      },
+      "metaSortKey": -1716982181000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_department",
+      "parentId": "fld_departments",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "url": "{{ _.base_url }}/departments",
+      "name": "Create Department (Admin Only)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Recursos Humanos\",\n  \"details\": \"Departamento voltado para gestão de pessoas, contratações e RH\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.admin_token }}"
+      },
+      "metaSortKey": -1716982180000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "fld_tickets",
+      "parentId": "wrk_1",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "name": "4. Tickets",
+      "description": "Endpoints to submit, view, assign, and update tickets.",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1716982178000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_create_ticket",
+      "parentId": "fld_tickets",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "url": "{{ _.base_url }}/tickets",
+      "name": "Create Ticket (Client Only)",
+      "method": "POST",
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "pair_title",
+            "name": "title",
+            "value": "Problema de login na intranet",
+            "disabled": false
+          },
+          {
+            "id": "pair_desc",
+            "name": "description",
+            "value": "Não consigo realizar o login usando minhas credenciais corporativas no novo portal de TI. Aparece erro 500.",
+            "disabled": false
+          },
+          {
+            "id": "pair_dept",
+            "name": "departmentId",
+            "value": "IT-DEPT",
+            "disabled": false
+          },
+          {
+            "id": "pair_photo",
+            "name": "photo",
+            "type": "file",
+            "fileName": "",
+            "disabled": true,
+            "description": "Para testar upload de anexo, ative este campo e selecione uma imagem no Insomnia"
+          }
+        ]
+      },
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.client_token }}"
+      },
+      "metaSortKey": -1716982181000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_list_tickets",
+      "parentId": "fld_tickets",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "url": "{{ _.base_url }}/tickets",
+      "name": "List Tickets (Role Filtered)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.client_token }}"
+      },
+      "metaSortKey": -1716982180000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_ticket",
+      "parentId": "fld_tickets",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "url": "{{ _.base_url }}/tickets/{{ _.ticket_id }}",
+      "name": "Get Ticket Details",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.client_token }}"
+      },
+      "metaSortKey": -1716982179000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_assign_ticket",
+      "parentId": "fld_tickets",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "url": "{{ _.base_url }}/tickets/{{ _.ticket_id }}/assign",
+      "name": "Assign Ticket to Me (Agent Only)",
+      "method": "PATCH",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.agent_ti_token }}"
+      },
+      "metaSortKey": -1716982178000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_resolve_ticket",
+      "parentId": "fld_tickets",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "url": "{{ _.base_url }}/tickets/{{ _.ticket_id }}/resolve",
+      "name": "Resolve Ticket (Agent Only)",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"solution\": \"Limpamos o cache de tokens do SSO corporativo e reiniciamos a sincronização com o AD local. Acesso normalizado.\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.agent_ti_token }}"
+      },
+      "metaSortKey": -1716982177000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_status",
+      "parentId": "fld_tickets",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "url": "{{ _.base_url }}/tickets/{{ _.ticket_id }}/status",
+      "name": "Update Ticket Status",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"status\": \"INCONSISTENT\",\n  \"justification\": \"O usuário informou erro no portal de TI, mas o departamento selecionado foi RH. Favor abrir no setor correto.\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.agent_ti_token }}"
+      },
+      "metaSortKey": -1716982176000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "fld_comments",
+      "parentId": "wrk_1",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "name": "5. Comments",
+      "description": "Endpoints related to ticket discussion and commenting.",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1716982177000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_create_comment",
+      "parentId": "fld_comments",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "url": "{{ _.base_url }}/tickets/{{ _.ticket_id }}/comments",
+      "name": "Add Comment to Ticket",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"message\": \"Gostaria de saber se há alguma previsão. Preciso muito do acesso hoje.\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.client_token }}"
+      },
+      "metaSortKey": -1716982181000,
+      "isPrivate": false,
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_comments",
+      "parentId": "fld_comments",
+      "modified": 1716982181000,
+      "created": 1716982181000,
+      "url": "{{ _.base_url }}/tickets/{{ _.ticket_id }}/comments",
+      "name": "Get Comments for Ticket",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.client_token }}"
+      },
+      "metaSortKey": -1716982180000,
+      "isPrivate": false,
+      "_type": "request"
+    }
+  ]
+}

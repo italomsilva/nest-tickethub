@@ -17,7 +17,7 @@ export class LoginUseCase {
     if (!user) {
       throw new UnauthorizedActionException('Invalid credentials');
     }
-
+    const hash = await this.hashGateway.hash(passwordPlain);
     const matches = await this.hashGateway.compare(passwordPlain, user.passwordHash);
     if (!matches) {
       throw new UnauthorizedActionException('Invalid credentials');

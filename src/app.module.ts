@@ -9,9 +9,11 @@ import { AuthModule } from './infrastructure/nest/auth.module';
 import { DepartmentsModule } from './infrastructure/nest/departments.module';
 import { AuthMiddleware } from './infrastructure/http/middleware/auth.middleware';
 import { DomainExceptionFilter } from './infrastructure/http/filters/domain-exception.filter';
+import { DatabaseModule } from './infrastructure/database/postgres/database.module';
 
 @Module({
   imports: [
+    DatabaseModule,
     TicketsModule,
     CommentsModule,
     UsersModule,

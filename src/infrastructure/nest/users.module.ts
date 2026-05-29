@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { UsersController } from '../../interface/controllers/users.controller';
 import { CreateUserUseCase } from '../../application/use-cases/users/create-user.use-case';
 import { GetMeUseCase } from '../../application/use-cases/users/get-me.use-case';
-import { InMemoryUsersRepository } from '../database/in-memory/in-memory-users.repository';
+import { PostgresUsersRepository } from '../database/postgres/repositories/postgres-users.repository';
 import { BcryptHashGateway } from '../gateways/bcrypt-hash.gateway';
 
 @Module({
@@ -12,7 +12,7 @@ import { BcryptHashGateway } from '../gateways/bcrypt-hash.gateway';
     GetMeUseCase,
     {
       provide: 'IUsersRepository',
-      useClass: InMemoryUsersRepository,
+      useClass: PostgresUsersRepository,
     },
     {
       provide: 'IHashGateway',

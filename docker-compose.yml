@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: tickethub-postgres
+    environment:
+      POSTGRES_USER: tickethub
+      POSTGRES_PASSWORD: tickethub-password
+      POSTGRES_DB: tickethub_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tickethub -d tickethub_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tickethub-app
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - DATABASE_URL=postgresql://tickethub:tickethub-password@postgres:5432/tickethub_db?schema=public
+      - STORAGE_PROVIDER=local
+      - JWT_SECRET=tickethub-jwt-secret-key-12345
+      - BASE_URL=http://localhost:3000
+      - AWS_BUCKET=tickethub-production-bucket
+      - AWS_REGION=us-east-1
+    volumes:
+      - ./uploads:/usr/src/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: always
+
+volumes:
+  pgdata:
