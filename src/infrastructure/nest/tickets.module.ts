@@ -6,6 +6,11 @@ import { FindOneTicketUseCase } from '../../application/use-cases/tickets/find-o
 import { AssignTicketUseCase } from '../../application/use-cases/tickets/assign-ticket.use-case';
 import { ResolveTicketUseCase } from '../../application/use-cases/tickets/resolve-ticket.use-case';
 import { UpdateTicketStatusUseCase } from '../../application/use-cases/tickets/update-ticket-status.use-case';
+import { InMemoryTicketsRepository } from '../database/in-memory/in-memory-tickets.repository';
+import { InMemoryTicketAuditLogsRepository } from '../database/in-memory/in-memory-audit-logs.repository';
+import { HybridNotificationGateway } from '../gateways/hybrid-notification.gateway';
+import { LocalStorageGateway } from '../gateways/local-storage.gateway';
+import { AmazonS3StorageGateway } from '../gateways/s3-storage.gateway';
 
 @Module({
   controllers: [TicketsController],
@@ -16,6 +21,26 @@ import { UpdateTicketStatusUseCase } from '../../application/use-cases/tickets/u
     AssignTicketUseCase,
     ResolveTicketUseCase,
     UpdateTicketStatusUseCase,
+    {
+      provide: 'ITicketsRepository',
+      useClass: InMemoryTicketsRepository,
+    },
+    {
+      provide: 'ITicketAuditLogsRepository',
+      useClass: InMemoryTicketAuditLogsRepository,
+    },
+    {
+      provide: 'INotificationGateway',
+      useClass: HybridNotificationGateway,
+    },
+    {
+      provide: 'IStorageGateway',
+      useFactory: () => {
+        return process.env.STORAGE_PROVIDER === 's3'
+          ? new AmazonS3StorageGateway()
+          : new LocalStorageGateway();
+      },
+    },
   ],
   exports: [
     CreateTicketUseCase,

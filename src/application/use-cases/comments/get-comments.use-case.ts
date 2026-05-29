@@ -1,17 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import type { ITicketCommentsRepository } from '../../repositories/ITicketCommentsRepository';
+import type { ITicketsRepository } from '../../repositories/ITicketsRepository';
 import { Comment } from '../../../domain/entities/comment.entity';
+import { TicketNotFoundException } from '../../../domain/exceptions/ticket-not-found.exception';
 
 @Injectable()
 export class GetCommentsUseCase {
+  constructor(
+    @Inject('ITicketCommentsRepository') private readonly commentsRepository: ITicketCommentsRepository,
+    @Inject('ITicketsRepository') private readonly ticketsRepository: ITicketsRepository,
+  ) {}
+
   async execute(ticketId: string, user: any): Promise<Comment[]> {
-    return [
-      {
-        id: 'comment-1',
-        ticketId,
-        userId: 'user-1',
-        message: 'Mock Message',
-        createdAt: new Date(),
-      },
-    ];
+    const ticket = await this.ticketsRepository.findById(ticketId);
+    if (!ticket) {
+      throw new TicketNotFoundException(ticketId);
+    }
+    return this.commentsRepository.findByTicketId(ticketId);
   }
 }

@@ -1,23 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import type { ITicketsRepository } from '../../repositories/ITicketsRepository';
 import { Ticket } from '../../../domain/entities/ticket.entity';
-import { TicketStatus } from '../../../domain/enums/ticket-status.enum';
 import { TicketNotFoundException } from '../../../domain/exceptions/ticket-not-found.exception';
+import { UnauthorizedActionException } from '../../../domain/exceptions/unauthorized-action.exception';
 
 @Injectable()
 export class FindOneTicketUseCase {
+  constructor(
+    @Inject('ITicketsRepository') private readonly ticketsRepository: ITicketsRepository,
+  ) {}
+
   async execute(id: string, user: any): Promise<Ticket> {
-    if (id === 'non-existent') {
+    const ticket = await this.ticketsRepository.findById(id);
+    if (!ticket) {
       throw new TicketNotFoundException(id);
     }
-    return {
-      id,
-      title: 'Mock Ticket',
-      description: 'Description',
-      status: TicketStatus.OPEN,
-      clientId: 'client-1',
-      targetDepartmentId: 'dept-1',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+
+    const reqUser = user.user || user;
+
+    if (reqUser.role === 'CLIENT' && ticket.clientId !== reqUser.id) {
+      throw new UnauthorizedActionException('You are not authorized to view this ticket.');
+    }
+
+    if (reqUser.role === 'AGENT' && ticket.targetDepartmentId !== reqUser.departmentId) {
+      throw new UnauthorizedActionException('You are not authorized to view this ticket.');
+    }
+
+    return ticket;
   }
 }

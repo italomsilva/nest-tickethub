@@ -1,16 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import type { IDepartmentsRepository } from '../../repositories/IDepartmentsRepository';
 import { Department } from '../../../domain/entities/department.entity';
 
 @Injectable()
 export class FindAllDepartmentsUseCase {
+  constructor(
+    @Inject('IDepartmentsRepository') private readonly departmentsRepository: IDepartmentsRepository,
+  ) {}
+
   async execute(): Promise<Department[]> {
-    return [
-      {
-        id: 'dept-1',
-        name: 'TI',
-        details: 'Tecnologia da Informação',
-        createdAt: new Date(),
-      },
-    ];
+    return this.departmentsRepository.findAll();
   }
 }

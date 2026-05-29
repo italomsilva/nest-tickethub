@@ -1,17 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import type { IUsersRepository } from '../../repositories/IUsersRepository';
 import { User } from '../../../domain/entities/user.entity';
-import { UserRole } from '../../../domain/enums/user-role.enum';
 
 @Injectable()
 export class GetMeUseCase {
+  constructor(
+    @Inject('IUsersRepository') private readonly usersRepository: IUsersRepository,
+  ) {}
+
   async execute(userId: string): Promise<User> {
-    return {
-      id: userId,
-      name: 'John Doe',
-      email: 'john@example.com',
-      passwordHash: 'hashed-password',
-      role: UserRole.CLIENT,
-      createdAt: new Date(),
-    };
+    const user = await this.usersRepository.findById(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return user;
   }
 }
